@@ -27,6 +27,8 @@ public class ProductEventOutbox {
 	@UuidGenerator
 	private String id;
 
+	private boolean sent = false;
+
 	private String eventType;
 
 	private String productJson;

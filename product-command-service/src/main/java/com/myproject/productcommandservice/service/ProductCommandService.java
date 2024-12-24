@@ -19,8 +19,6 @@ public class ProductCommandService {
 
 	private final ProductEventOutboxRepository productEventOutboxRepository;
 
-	private final KafkaProducerService kafkaProducerService;
-
 	public Product createProduct(ProductDTO productDTO) {
 		return null;
 	}

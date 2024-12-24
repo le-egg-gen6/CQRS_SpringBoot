@@ -1,6 +1,7 @@
 package com.myproject.productcommandservice.repository;
 
 import com.myproject.productcommandservice.entity.ProductEventOutbox;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,5 +11,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ProductEventOutboxRepository extends JpaRepository<ProductEventOutbox, String> {
+
+	List<ProductEventOutbox> findAllBySentIsFalse();
 
 }
