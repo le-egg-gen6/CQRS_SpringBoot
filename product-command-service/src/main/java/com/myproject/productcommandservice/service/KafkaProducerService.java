@@ -35,7 +35,7 @@ public class KafkaProducerService {
 		}
 		String productJson = outbox.getProductJson();
 		Product product = JsonUtils.fromJsonString(productJson, Product.class);
-		ProductEvent event = new ProductEvent(outbox.getEventType(), product);
+		ProductEvent event = new ProductEvent(outbox.getType(), product);
 		kafkaTemplate.send(topic, event)
 			.thenAcceptAsync(result -> {
 				RecordMetadata metadata = result.getRecordMetadata();

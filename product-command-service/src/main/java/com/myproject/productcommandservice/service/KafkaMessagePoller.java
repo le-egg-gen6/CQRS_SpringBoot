@@ -18,7 +18,7 @@ public class KafkaMessagePoller {
 
 	private final ProductEventOutboxService productEventOutboxService;
 
-	@Scheduled(fixedRate = 5000)
+	@Scheduled(fixedRate = 10 * 1000)
 	private void pollingMessages() {
 		List<ProductEventOutbox> unprocessedOutboxMessages = productEventOutboxService.getAllUnprocessedOutboxMessages();
 		for (ProductEventOutbox outbox : unprocessedOutboxMessages) {

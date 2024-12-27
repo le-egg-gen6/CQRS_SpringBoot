@@ -1,5 +1,6 @@
 package com.myproject.productcommandservice.entity;
 
+import com.myproject.productcommandservice.utils.JsonUtils;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -29,8 +30,13 @@ public class ProductEventOutbox {
 
 	private boolean sent = false;
 
-	private String eventType;
+	private String type;
 
 	private String productJson;
+
+	public ProductEventOutbox(String type, Product product) {
+		this.type = type;
+		this.productJson = JsonUtils.toJsonString(product);
+	}
 
 }

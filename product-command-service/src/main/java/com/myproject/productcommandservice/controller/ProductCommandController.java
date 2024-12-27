@@ -4,6 +4,7 @@ import com.myproject.productcommandservice.dto.ProductDTO;
 import com.myproject.productcommandservice.service.ProductCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -30,6 +31,12 @@ public class ProductCommandController {
 	@PutMapping("/{id}")
 	public ResponseEntity<?> updateProduct(@PathVariable String id, @RequestBody ProductDTO productEvent) {
 		return ResponseEntity.ok(commandService.updateProduct(id, productEvent));
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deleteProduct(@PathVariable String id) {
+		commandService.deleteProduct(id);
+		return ResponseEntity.ok().build();
 	}
 
 }

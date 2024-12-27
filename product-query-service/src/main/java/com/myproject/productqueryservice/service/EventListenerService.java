@@ -1,9 +1,10 @@
 package com.myproject.productqueryservice.service;
 
+import com.myproject.productqueryservice.entity.Product;
 import com.myproject.productqueryservice.event.ProductEvent;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 /**
  * @author nguyenle
@@ -15,9 +16,23 @@ public class EventListenerService {
 
 	private final ProductQueryService productQueryService;
 
-	@EventListener
+	@TransactionalEventListener
 	public void handleProductEvent(ProductEvent productEvent) {
-		System.out.println(productEvent);
+		if (productEvent.getSource() instanceof Product product) {
+			switch (productEvent.getType()) {
+				case "CREATE":
+					productQueryService.createProduct(product);
+					break;
+				case "UPDATE":
+					productQueryService.updateProduct(product);
+					break;
+				case "DELETE":
+					productQueryService.deleteProduct(product);
+					break;
+				default:
+					break;
+			}
+		}
 	}
 
 }

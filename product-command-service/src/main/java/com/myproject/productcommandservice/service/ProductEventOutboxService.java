@@ -5,6 +5,7 @@ import com.myproject.productcommandservice.repository.ProductEventOutboxReposito
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author nguyenle
@@ -20,6 +21,7 @@ public class ProductEventOutboxService {
 		return productEventOutboxRepository.findAllBySentIsFalse();
 	}
 
+	@Transactional
 	public void processOutboxMessage(String outboxId) {
 		ProductEventOutbox outbox = productEventOutboxRepository.findById(outboxId).orElse(null);
 		if (outbox != null) {

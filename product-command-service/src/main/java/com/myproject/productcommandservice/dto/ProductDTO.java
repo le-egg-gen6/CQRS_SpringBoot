@@ -16,6 +16,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProductDTO {
 
+	private String id;
+
 	private String name;
 
 	private String description;
@@ -25,6 +27,7 @@ public class ProductDTO {
 	private int quantity;
 
 	public ProductDTO(Product product) {
+		this.id = product.getId();
 		this.name = product.getName();
 		this.description = product.getDescription();
 		this.price = product.getPrice();
