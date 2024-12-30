@@ -9,6 +9,8 @@ spec:
   selector:
     matchLabels:
       app: postgres-product-query
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
