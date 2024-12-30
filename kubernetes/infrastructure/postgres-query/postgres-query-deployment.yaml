@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: postgres-product-query
+  name: postgres-product-query
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-product-query
+  template:
+    metadata:
+      labels:
+        app: postgres-product-query
+    spec:
+      containers:
+        - name: postgres-product-query
+          env:
+            - name: PG_DATA
+              value: /data/postgres
+            - name: POSTGRES_DB
+              value: product-query-service
+            - name: POSTGRES_USER
+              value: lenn
+            - name: POSTGRES_PASSWORD
+              value: lenn
+          image: postgres:12.12-alpine
+          ports:
+            - containerPort: 5432
+          resources: {}
+          volumeMounts:
+            - mountPath: /data/postgres
+              name: postgres-product-query-claim0
+      restartPolicy: Always
+      volumes:
+        - name: postgres-product-query
+          persistentVolumeClaim:
+            claimName: postgres-product-query-claim0
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: postgres-product-query
+  name: postgres-product-query
+spec:
+  ports:
+    - name: "5432"
+      port: 5432
+      targetPort: 5432
+  selector:
+    app: postgres-product-query
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: postgres-product-query-claim0
+  name: postgres-product-query-claim0
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}

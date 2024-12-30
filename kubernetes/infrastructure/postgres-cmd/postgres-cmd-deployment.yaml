@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: postgres-product-command
+  name: postgres-product-command
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-product-command
+  template:
+    metadata:
+      labels:
+        app: postgres-product-command
+    spec:
+      containers:
+        - name: postgres-product-command
+          env:
+            - name: PG_DATA
+              value: /data/postgres
+            - name: POSTGRES_DB
+              value: product-command-service
+            - name: POSTGRES_USER
+              value: lenn
+            - name: POSTGRES_PASSWORD
+              value: lenn
+          image: postgres:12.12-alpine
+          ports:
+            - containerPort: 5431
+          resources: {}
+          volumeMounts:
+            - mountPath: /data/postgres
+              name: postgres-product-command-claim0
+      restartPolicy: Always
+      volumes:
+        - name: postgres-product-command
+          persistentVolumeClaim:
+            claimName: postgres-product-command-claim0
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: postgres-product-command
+  name: postgres-product-command
+spec:
+  ports:
+    - name: "5431"
+      port: 5431
+      targetPort: 5431
+  selector:
+    app: postgres-product-command
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: postgres-product-command-claim0
+  name: postgres-product-command-claim0
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}
