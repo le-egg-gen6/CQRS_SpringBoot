@@ -47,7 +47,7 @@ metadata:
   name: postgres-product-query
 spec:
   ports:
-    - name: "5432"
+    - name: "PostgresProductQuery"
       port: 5432
       targetPort: 5432
   selector:
