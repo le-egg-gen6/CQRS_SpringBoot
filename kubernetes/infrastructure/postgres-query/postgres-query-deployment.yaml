@@ -33,7 +33,7 @@ spec:
           resources: {}
           volumeMounts:
             - mountPath: /data/postgres
-              name: postgres-product-query-claim0
+              name: postgres-product-query
       restartPolicy: Always
       volumes:
         - name: postgres-product-query

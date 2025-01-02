@@ -33,7 +33,7 @@ spec:
           resources: {}
           volumeMounts:
             - mountPath: /data/postgres
-              name: postgres-product-command-claim0
+              name: postgres-product-command
       restartPolicy: Always
       volumes:
         - name: postgres-product-command
