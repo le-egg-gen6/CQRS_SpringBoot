@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21.0.1_12-jdk-alpine as builder
+FROM eclipse-temurin:21.0.1_12-jdk-alpine AS builder
 WORKDIR extracted
 ADD target/*.jar app.jar
 RUN java -Djarmode=layertools -jar app.jar extract
