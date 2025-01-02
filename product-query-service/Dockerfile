@@ -1,32 +1,15 @@
-# Build stage
-FROM eclipse-temurin:21-jdk-alpine as builder
+FROM maven:3.9.4-eclipse-temurin-21-alpine AS build
+
 WORKDIR /app
 
-# Copy Maven files first for better layer caching
-COPY mvnw .
-COPY .mvn .mvn
 COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Add execute permissions to Maven wrapper and download dependencies
-RUN chmod +x mvnw && \
-    ./mvnw dependency:go-offline
-
-# Copy source code and build
-COPY src src
-RUN ./mvnw clean package -DskipTests
-
-# Extract layers for better caching
-RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
-
-# Runtime stage
 FROM eclipse-temurin:21-jre-alpine
-VOLUME /tmp
-ARG DEPENDENCY=/app/target/dependency
 
-# Copy layers from builder stage
-COPY --from=builder ${DEPENDENCY}/BOOT-INF/lib /app/lib
-COPY --from=builder ${DEPENDENCY}/META-INF /app/META-INF
-COPY --from=builder ${DEPENDENCY}/BOOT-INF/classes /app
+WORKDIR /app
 
-# Set the entrypoint
-ENTRYPOINT ["java", "-cp", "app:app/lib/*", "com.yourcompany.Application"]
+COPY --from=build /app/target/*.jar application.jar
+
+CMD ["java", "-jar", "application.jar"]
