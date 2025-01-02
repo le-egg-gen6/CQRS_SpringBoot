@@ -2,6 +2,9 @@ spring:
   application:
     name: api-gateway
 
+app:
+  eureka-sever: localhost
+
   cloud:
     gateway:
       routes:
@@ -18,7 +21,7 @@ spring:
                 Path: /api/product-query
 
         - id: discovery-server
-          uri: http://admin:admin@localhost:8761
+          uri: http://admin:admin@${app.eureka-sever}:8761
           predicates:
             - args:
                 Path: /eureka/web
@@ -27,7 +30,7 @@ spring:
                 SetPath: /
 
         - id: discovery-server-static
-          uri: http://admin:admin@localhost:8761
+          uri: http://admin:admin@${app.eureka-server}:8761
           predicates:
             - args:
                 Path: /eureka/**
@@ -35,7 +38,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://admin:admin@localhost:8761/eureka
+      defaultZone: http://admin:admin@${app.eureka-server}:8761/eureka
 
 server:
-  port: 8080
+  port: 8181

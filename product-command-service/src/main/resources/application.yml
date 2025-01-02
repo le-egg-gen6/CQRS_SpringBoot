@@ -1,1 +1,25 @@
-spring.application.name=product-command-service
+server:
+  port: 0
+
+app:
+  eureka-server: localhost
+
+spring:
+  application:
+    name: product-command-service
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: admin
+    password: admin
+    url: jdbc:postgresql://localhost:5431/product-command-service
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://admin:admin@${app.eureka-server}}:8761/eureka
