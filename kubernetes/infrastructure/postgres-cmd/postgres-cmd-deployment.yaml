@@ -19,7 +19,7 @@ spec:
       containers:
         - name: postgres-product-command
           env:
-            - name: PG_DATA
+            - name: PGDATA
               value: /data/postgres
             - name: POSTGRES_DB
               value: product-command-service
