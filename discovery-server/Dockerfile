@@ -7,8 +7,9 @@ COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
 
-# Download dependencies
-RUN ./mvnw dependency:go-offline
+# Add execute permissions to Maven wrapper and download dependencies
+RUN chmod +x mvnw && \
+    ./mvnw dependency:go-offline
 
 # Copy source code and build
 COPY src src
