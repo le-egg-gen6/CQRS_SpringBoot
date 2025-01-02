@@ -32,7 +32,7 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - name: "Api Gateway"
+    - name: "api-gateway"
       port: 8181
       targetPort: 8080
   selector:

@@ -36,7 +36,7 @@ metadata:
   name: discovery-server
 spec:
   ports:
-    - name: "Discovery Server"
+    - name: "discovery-server"
       port: 8761
       targetPort: 8761
   selector:

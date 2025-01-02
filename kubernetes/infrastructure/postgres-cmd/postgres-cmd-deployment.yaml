@@ -49,7 +49,7 @@ metadata:
   name: postgres-product-command
 spec:
   ports:
-    - name: "PostgresProductCommand"
+    - name: "postgres-product-command"
       port: 5431
       targetPort: 5431
   selector:

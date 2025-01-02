@@ -33,7 +33,7 @@ spec:
   selector:
     app: zookeeper
   ports:
-    - name: "Zookeeper"
+    - name: "zookeeper"
       port: 2181
       targetPort: 2181
 status:
