@@ -1,13 +1,31 @@
-FROM eclipse-temurin:21.0.1_12-jdk-alpine AS builder
-WORKDIR /extracted
-ADD target/*.jar app.jar
-RUN java -Djarmode=layertools -jar app.jar extract
+# Build stage
+FROM eclipse-temurin:21-jdk-alpine as builder
+WORKDIR /app
 
-FROM eclipse-temurin:21.0.1_12-jre-alpine
-WORKDIR /application
-COPY --from=builder extracted/dependencies/ ./
-COPY --from=builder extracted/spring-boot-loader/ ./
-COPY --from=builder extracted/snapshot-dependencies/ ./
-COPY --from=builder extracted/application/ ./
-EXPOSE 8080
-ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
+# Copy Maven files first for better layer caching
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+
+# Download dependencies
+RUN ./mvnw dependency:go-offline
+
+# Copy source code and build
+COPY src src
+RUN ./mvnw clean package -DskipTests
+
+# Extract layers for better caching
+RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
+
+# Runtime stage
+FROM eclipse-temurin:21-jre-alpine
+VOLUME /tmp
+ARG DEPENDENCY=/app/target/dependency
+
+# Copy layers from builder stage
+COPY --from=builder ${DEPENDENCY}/BOOT-INF/lib /app/lib
+COPY --from=builder ${DEPENDENCY}/META-INF /app/META-INF
+COPY --from=builder ${DEPENDENCY}/BOOT-INF/classes /app
+
+# Set the entrypoint
+ENTRYPOINT ["java", "-cp", "app:app/lib/*", "com.yourcompany.Application"]
