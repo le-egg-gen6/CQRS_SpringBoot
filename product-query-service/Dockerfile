@@ -1,19 +1,13 @@
-FROM amazoncorretto:21-alpine3.17 AS BUILDER
+FROM eclipse-temurin:21.0.1_12-jdk-alpine as builder
+WORKDIR extracted
+ADD target/*.jar app.jar
+RUN java -Djarmode=layertools -jar app.jar extract
 
-WORKDIR /build
-
-COPY .mvn/ ./.mvn
-COPY mvnw pom.xml ./
-RUN sed -i 's/\r$//' mvnw
-RUN ./mvnw dependency:go-offline
-
-COPY . .
-COPY . .
-RUN sed -i 's/\r$//' mvnw
-RUN ./mvnw package -DskipTests
-
-FROM amazoncorretto:21-alpine3.17
-WORKDIR /run
-COPY --from=BUILDER /build/target/*.jar app.jar
-
-ENTRYPOINT ["java", "-jar", "/run/app.jar"]
+FROM eclipse-temurin:21.0.1_12-jre-alpine
+WORKDIR application
+COPY --from=builder extracted/dependencies/ ./
+COPY --from=builder extracted/spring-boot-loader/ ./
+COPY --from=builder extracted/snapshot-dependencies/ ./
+COPY --from=builder extracted/application/ ./
+EXPOSE 8080
+ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
