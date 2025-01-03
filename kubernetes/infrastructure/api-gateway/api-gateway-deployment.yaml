@@ -17,6 +17,9 @@ spec:
       containers:
         - name: api-gateway
           image: nguyenle/cqrs-api-gateway:lastest
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
           ports:
             - containerPort: 8080
             - containerPort: 8181

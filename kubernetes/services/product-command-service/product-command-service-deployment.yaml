@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: product-command-service
+  name: product-command-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-command-service
+  template:
+    metadata:
+      labels:
+        app: product-command-service
+    spec:
+      containers:
+        - name: product-command-service
+          image: nguyenle/cqrs-product-command-service
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+          resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: product-command-service
+  name: product-command-service
+spec:
+  ports:
+    - name: "product-command-service"
+      port: 80
+      targetPort: 9191
+  selector:
+    app: product-command-service
+status:
+  loadBalancer: {}

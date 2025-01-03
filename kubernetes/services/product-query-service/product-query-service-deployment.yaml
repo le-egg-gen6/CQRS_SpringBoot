@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: product-query-service
+  name: product-query-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-query-service
+  template:
+    metadata:
+      labels:
+        app: product-query-service
+    spec:
+      containers:
+        - name: product-query-service
+          image: nguyenle/cqrs-product-query-service
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+          resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: product-query-service
+  name: product-query-service
+spec:
+  ports:
+    - name: "product-query-service"
+      port: 80
+      targetPort: 9192
+  selector:
+    app: product-query-service
+status:
+  loadBalancer: {}
